@@ -159,9 +159,6 @@
                     <input type="text" id="nomePai" class="form-control" placeholder="Nome do Pai" required>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" id="nomeRua" class="form-control" placeholder="Nome da Rua" required>
-                </div>
-                <div class="col-md-6">
                     <input type="text" id="bairro" class="form-control" placeholder="Bairro" required>
                 </div>
                 <div class="col-md-6">
