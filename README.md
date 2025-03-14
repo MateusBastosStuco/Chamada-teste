@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciamento de Alunos - Calendário de Presença</title>
+    <title>Gerenciamento de Alunos - Sistema de Chamada</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <style>
         body {
             background: linear-gradient(135deg, #4e54c8, #8f94fb);
@@ -28,7 +29,10 @@
             max-width: 1200px;
         }
 
-        .btn-remove, .btn-add-calendar, .btn-presenca, .btn-falta {
+        .btn-remove,
+        .btn-add-calendar,
+        .btn-presenca,
+        .btn-falta {
             border: none;
             padding: 5px 10px;
             border-radius: 5px;
@@ -79,74 +83,49 @@
             display: none;
         }
 
-        /* Melhorar visualização do calendário */
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);  /* 5 colunas para os dias da semana */
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .calendar .calendar-day {
-            padding: 20px;
-            background: #f5f5f5;
-            text-align: center;
-            border-radius: 5px;
-            min-height: 120px;
+        .status-container {
             display: flex;
-            flex-direction: column;
             justify-content: flex-start;
-            border: 1px solid #ddd;
-            position: relative;
+            align-items: center;
         }
 
-        .calendar .calendar-day span {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 10px;
+        .status-container .btn-presenca,
+        .status-container .btn-falta {
+            margin-left: 10px;
         }
 
-        .calendar .occupied {
-            background-color: #ffffff;
-            color: rgb(0, 0, 0);
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        .btn-status {
+            background-color: #f7c500;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
         }
 
-        .calendar .calendar-day .students {
-            font-size: 12px;
-            margin-top: 10px;
-            overflow-y: auto;
-        }
-
-        .calendar .calendar-day .students .student {
-            margin: 5px 0;
-            padding: 2px 0;
-        }
-
-        .calendar .calendar-day .students .student span {
-            background-color: #fff;
-            padding: 5px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
-        }
-
-        /* Estilo para os períodos */
-        .periodo {
-            font-weight: bold;
+        .justificativa-falta {
             margin-top: 5px;
+            display: none;
         }
 
-        /* Relatório */
-        .relatorio {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #f5f5f5;
+        .justificativa-falta textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
             border-radius: 5px;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
             font-size: 14px;
+        }
+
+        .justificativa-falta button {
+            margin-top: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
+
 <body>
 
     <div class="container-admin">
@@ -157,13 +136,18 @@
             <label for="filtroDisciplina" class="form-label">Filtrar por Disciplina</label>
             <select id="filtroDisciplina" class="form-select" onchange="filtrarAlunos()">
                 <option value="">Todas as Disciplinas</option>
-                <option value="Voleibol">Voleibol</option>
+                <option value="Street Dance">Street Dance</option>
                 <option value="Futebol">Futebol</option>
-                <option value="Street">Street</option>
-                <option value="Teatro">Teatro</option>
-                <option value="Ludoteca">Ludoteca</option>
-                <option value="Eureca">Eureca</option>
                 <option value="Música">Música</option>
+                <option value="Ludoteca Segunda e Quarta">Ludoteca Segunda e Quarta</option>
+                <option value="Contação de Histórias">Contação de Histórias</option>
+                <option value="Ballet">Ballet</option>
+                <option value="Vôlei">Vôlei</option>
+                <option value="Ludoteca Terça e Quinta">Ludoteca Terça e Quinta</option>
+                <option value="Teatro">Teatro</option>
+                <option value="Programa Eureka">Programa Eureka</option>
+                <option value="Sucatoteca">Sucatoteca</option>
+                <option value="Adolescer">Adolescer</option>
             </select>
         </div>
 
@@ -173,25 +157,50 @@
         </div>
 
         <div class="mb-3">
-            <select id="disciplina" class="form-select">
-                <option value="">Disciplina</option>
-                <option value="Voleibol">Voleibol</option>
+            <label for="disciplina1" class="form-label">Disciplina 1</label>
+            <select id="disciplina1" class="form-select">
+                <option value="">Selecione a Disciplina</option>
+                <option value="Street Dance">Street Dance</option>
                 <option value="Futebol">Futebol</option>
-                <option value="Street">Street</option>
-                <option value="Teatro">Teatro</option>
-                <option value="Ludoteca">Ludoteca</option>
-                <option value="Eureca">Eureca</option>
                 <option value="Música">Música</option>
+                <option value="Ludoteca Segunda e Quarta">Ludoteca Segunda e Quarta</option>
+                <option value="Contação de Histórias">Contação de Histórias</option>
+                <option value="Ballet">Ballet</option>
+                <option value="Vôlei">Vôlei</option>
+                <option value="Ludoteca Terça e Quinta">Ludoteca Terça e Quinta</option>
+                <option value="Teatro">Teatro</option>
+                <option value="Programa Eureka">Programa Eureka</option>
+                <option value="Sucatoteca">Sucatoteca</option>
+                <option value="Adolescer">Adolescer</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="disciplina2" class="form-label">Disciplina 2</label>
+            <select id="disciplina2" class="form-select">
+                <option value="">Selecione a Disciplina</option>
+                <option value="Street Dance">Street Dance</option>
+                <option value="Futebol">Futebol</option>
+                <option value="Música">Música</option>
+                <option value="Ludoteca Segunda e Quarta">Ludoteca Segunda e Quarta</option>
+                <option value="Contação de Histórias">Contação de Histórias</option>
+                <option value="Ballet">Ballet</option>
+                <option value="Vôlei">Vôlei</option>
+                <option value="Ludoteca Terça e Quinta">Ludoteca Terça e Quinta</option>
+                <option value="Teatro">Teatro</option>
+                <option value="Programa Eureka">Programa Eureka</option>
+                <option value="Sucatoteca">Sucatoteca</option>
+                <option value="Adolescer">Adolescer</option>
             </select>
         </div>
 
         <div class="mb-3">
             <select id="periodo" class="form-select">
                 <option value="">Período</option>
-                <option value="PeriodoM1">Periodo 1</option>
-                <option value="PeriodoM2">Periodo 2</option>
-                <option value="PeriodoT1">Periodo 1</option>
-                <option value="PeriodoT2">Periodo 2</option>
+                <option value="Periodo Manha 1">Periodo Manha 1</option>
+                <option value="Periodo Manha 2">Periodo Manha 2</option>
+                <option value="Periodo Tarde 1">Periodo Tarde 1</option>
+                <option value="Periodo Tarde 2">Periodo Tarde 2</option>
             </select>
         </div>
 
@@ -203,7 +212,13 @@
                 <option value="quarta">Quarta</option>
                 <option value="quinta">Quinta</option>
                 <option value="sexta">Sexta</option>
+                <option value="Segunda e Quarta">Segunda e Quarta</option>
+                <option value="Terça e Quinta">Terça e Quinta</option>
             </select>
+        </div>
+
+        <div class="mb-3">
+            <input type="text" id="professor" class="form-control" placeholder="Nome do Professor">
         </div>
 
         <button class="btn btn-primary w-100" onclick="adicionarAluno()">Adicionar Aluno</button>
@@ -211,92 +226,127 @@
         <!-- Lista de Alunos -->
         <h4 class="mt-4">Lista de Alunos</h4>
         <button class="btn btn-secondary w-100 mb-3" onclick="toggleAlunos()">Mostrar/Esconder Alunos</button>
-        <ul id="listaAlunos"></ul>
+        <div id="listaAlunos"></div>
 
         <!-- Botão para limpar todos os dados -->
         <button class="btn-clear-all" onclick="limparTodosDados()">Limpar Todos os Alunos</button>
-
-        <!-- Calendário -->
-        <h4 class="mt-4">Calendário</h4>
-        <div class="calendar" id="calendar"></div>
-
-        <!-- Botão para gerar relatório de presença -->
-        <button class="btn btn-success w-100 mt-3" onclick="gerarRelatorio()">Gerar Relatório de Presença</button>
-
-        <!-- Relatório de presença -->
-        <div id="relatorio" class="relatorio hidden"></div>
     </div>
 
     <script>
         let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
         let filtroDisciplina = "";
-        let calendario = JSON.parse(localStorage.getItem("calendario")) || {};
+
+        // Função para limpar filtro de disciplina
+        function clearFiltro() {
+            document.getElementById("filtroDisciplina").value = "";
+            filtroDisciplina = "";
+            renderizarListaAlunos();
+        }
 
         // Função para adicionar aluno
         function adicionarAluno() {
             const nome = document.getElementById('nomeAluno').value;
-            const disciplina = document.getElementById('disciplina').value;
+            const disciplina1 = document.getElementById('disciplina1').value;
+            const disciplina2 = document.getElementById('disciplina2').value;
             const periodo = document.getElementById('periodo').value;
             const diaSemana = document.getElementById('diaSemana').value;
+            const professor = document.getElementById('professor').value;
 
-            if (!nome || !disciplina || !periodo || !diaSemana) {
+            if (!nome || (!disciplina1 && !disciplina2) || !periodo || !diaSemana || !professor) {
                 alert("Preencha todos os campos.");
                 return;
             }
 
-            const aluno = { nome, disciplina, periodo, diaSemana };
-            alunos.push(aluno);
+            if (disciplina1) {
+                alunos.push({ nome, disciplina: disciplina1, periodo, diaSemana, professor, status: null, justificativa: "" });
+            }
+
+            if (disciplina2) {
+                alunos.push({ nome, disciplina: disciplina2, periodo, diaSemana, professor, status: null, justificativa: "" });
+            }
+
             localStorage.setItem("alunos", JSON.stringify(alunos));
-            adicionarAoCalendario(aluno);
             renderizarListaAlunos();
         }
 
-        // Função para renderizar a lista de alunos
+        // Função para mostrar ou esconder a lista de alunos
+        function toggleAlunos() {
+            const lista = document.getElementById("listaAlunos");
+            lista.classList.toggle("hidden");
+        }
+
+        // Função para renderizar lista de alunos por Período, Dia e Professor
         function renderizarListaAlunos() {
-            const listaAlunos = document.getElementById("listaAlunos");
-            listaAlunos.innerHTML = "";
+            const listaAlunosDiv = document.getElementById("listaAlunos");
+            listaAlunosDiv.innerHTML = "";
 
-            alunos.filter(aluno => filtroDisciplina === "" || aluno.disciplina === filtroDisciplina)
-                  .forEach((aluno, index) => {
-                const li = document.createElement("li");
-                li.classList.add("aluno-item");
-                li.innerHTML = `${aluno.nome} - ${aluno.disciplina} 
-                <button class="btn-remove" onclick="removerAluno(${index})">Remover</button>`;
-                listaAlunos.appendChild(li);
+            let alunosFiltrados = alunos.filter(aluno => {
+                return filtroDisciplina ? aluno.disciplina === filtroDisciplina : true;
             });
+
+            // Agrupar alunos por Período > Dia > Professor
+            let alunosAgrupados = alunosFiltrados.reduce((acc, aluno) => {
+                if (!acc[aluno.periodo]) acc[aluno.periodo] = {};
+                if (!acc[aluno.periodo][aluno.diaSemana]) acc[aluno.periodo][aluno.diaSemana] = {};
+                if (!acc[aluno.periodo][aluno.diaSemana][aluno.professor]) {
+                    acc[aluno.periodo][aluno.diaSemana][aluno.professor] = [];
+                }
+                acc[aluno.periodo][aluno.diaSemana][aluno.professor].push(aluno);
+                return acc;
+            }, {});
+
+            // Exibir a estrutura agrupada
+            for (let periodo in alunosAgrupados) {
+                const periodoDiv = document.createElement("div");
+                periodoDiv.classList.add("periodo");
+                periodoDiv.innerHTML = `<h5>Período: ${periodo}</h5>`;
+
+                for (let dia in alunosAgrupados[periodo]) {
+                    const diaDiv = document.createElement("div");
+                    diaDiv.classList.add("dia");
+                    diaDiv.innerHTML = `<h6>Dia: ${dia}</h6>`;
+
+                    for (let professor in alunosAgrupados[periodo][dia]) {
+                        const professorDiv = document.createElement("div");
+                        professorDiv.classList.add("professor");
+                        professorDiv.innerHTML = `<h7>Professor: ${professor}</h7>`;
+
+                        alunosAgrupados[periodo][dia][professor].forEach((aluno, index) => {
+                            const alunoDiv = document.createElement("div");
+                            alunoDiv.classList.add("aluno-item");
+
+                            alunoDiv.innerHTML = `
+                                <span>${aluno.nome} - ${aluno.disciplina}</span>
+                                <div class="status-container">
+                                    <button class="btn-presenca" onclick="marcarStatus(${index})">Presente</button>
+                                    <button class="btn-falta" onclick="marcarStatus(${index})">Faltou</button>
+                                    <button class="btn-remove" onclick="removerAluno(${index})">Remover</button>
+                                </div>
+                            `;
+
+                            professorDiv.appendChild(alunoDiv);
+                        });
+
+                        diaDiv.appendChild(professorDiv);
+                    }
+
+                    periodoDiv.appendChild(diaDiv);
+                }
+
+                listaAlunosDiv.appendChild(periodoDiv);
+            }
         }
 
-        // Função para adicionar aluno ao calendário
-        function adicionarAoCalendario(aluno) {
-            const key = `${aluno.diaSemana}_${aluno.periodo}`;
-            if (!calendario[key]) {
-                calendario[key] = [];
+        // Função para marcar presença ou falta
+        function marcarStatus(index) {
+            const aluno = alunos[index];
+            if (aluno.status === "Presente") {
+                aluno.status = "Faltou";
+            } else {
+                aluno.status = "Presente";
             }
-            calendario[key].push({ nome: aluno.nome, presente: null });
-            localStorage.setItem("calendario", JSON.stringify(calendario));
-            renderizarCalendario();
-        }
-
-        // Função para marcar presença
-        function marcarPresenca(dia, periodo, nome) {
-            const key = `${dia}_${periodo}`;
-            const aluno = calendario[key].find(aluno => aluno.nome === nome);
-            if (aluno) {
-                aluno.presente = true;
-                localStorage.setItem("calendario", JSON.stringify(calendario));
-                renderizarCalendario();
-            }
-        }
-
-        // Função para marcar falta
-        function marcarFalta(dia, periodo, nome) {
-            const key = `${dia}_${periodo}`;
-            const aluno = calendario[key].find(aluno => aluno.nome === nome);
-            if (aluno) {
-                aluno.presente = false;
-                localStorage.setItem("calendario", JSON.stringify(calendario));
-                renderizarCalendario();
-            }
+            localStorage.setItem("alunos", JSON.stringify(alunos));
+            renderizarListaAlunos();
         }
 
         // Função para remover aluno
@@ -308,93 +358,17 @@
 
         // Função para limpar todos os dados
         function limparTodosDados() {
-            if (confirm("Você tem certeza que deseja apagar todos os dados?")) {
-                localStorage.removeItem("alunos");
+            if (confirm("Tem certeza que deseja limpar todos os dados?")) {
                 alunos = [];
-                localStorage.removeItem("calendario");
-                calendario = {};
+                localStorage.removeItem("alunos");
                 renderizarListaAlunos();
-                renderizarCalendario();
             }
         }
 
-        // Função para mostrar/esconder a lista de alunos
-        function toggleAlunos() {
-            const listaAlunos = document.getElementById("listaAlunos");
-            listaAlunos.classList.toggle("hidden");
-        }
-
-        // Função para filtrar alunos
-        function filtrarAlunos() {
-            filtroDisciplina = document.getElementById("filtroDisciplina").value;
-            renderizarListaAlunos();
-        }
-
-        // Função para renderizar o calendário
-        function renderizarCalendario() {
-            const calendarElement = document.getElementById("calendar");
-            calendarElement.innerHTML = "";
-
-            const diasSemana = ["segunda", "terca", "quarta", "quinta", "sexta"];
-            const periodos = ["PeriodoM1", "PeriodoM2", "periodoT1", "periodoT2"];
-
-            diasSemana.forEach(dia => {
-                periodos.forEach(periodo => {
-                    const key = `${dia}_${periodo}`;
-                    const div = document.createElement("div");
-                    div.classList.add("calendar-day");
-                    div.innerHTML = `<span>${dia.charAt(0).toUpperCase() + dia.slice(1)}</span><span class="periodo">${periodo.charAt(0).toUpperCase() + periodo.slice(1)}</span>`;
-
-                    if (calendario[key]) {
-                        div.classList.add("occupied");
-                        const studentsDiv = document.createElement("div");
-                        studentsDiv.classList.add("students");
-                        calendario[key].forEach(aluno => {
-                            const studentDiv = document.createElement("div");
-                            studentDiv.classList.add("student");
-                            studentDiv.innerHTML = `<span>${aluno.nome}</span>
-                                                    <button class="btn-presenca" onclick="marcarPresenca('${dia}', '${periodo}', '${aluno.nome}')">Presente</button>
-                                                    <button class="btn-falta" onclick="marcarFalta('${dia}', '${periodo}', '${aluno.nome}')">Falta</button>`;
-                            studentsDiv.appendChild(studentDiv);
-                        });
-                        div.appendChild(studentsDiv);
-                    }
-
-                    calendarElement.appendChild(div);
-                });
-            });
-        }
-
-        // Função para gerar o relatório de presença
-        function gerarRelatorio() {
-            const relatorioDiv = document.getElementById("relatorio");
-            relatorioDiv.innerHTML = ""; // Limpar relatório anterior
-
-            const hoje = new Date();
-            const dataHoje = hoje.toLocaleDateString("pt-BR");
-
-            let relatorioContent = `<h5>Relatório de Presença - ${dataHoje}</h5>`;
-
-            Object.keys(calendario).forEach(key => {
-                const [dia, periodo] = key.split("_");
-                const alunosDiaPeriodo = calendario[key];
-
-                relatorioContent += `<h6>${dia.charAt(0).toUpperCase() + dia.slice(1)} - ${periodo.charAt(0).toUpperCase() + periodo.slice(1)}</h6><ul>`;
-
-                alunosDiaPeriodo.forEach(aluno => {
-                    relatorioContent += `<li>${aluno.nome} - ${aluno.presente === null ? 'Não registrado' : aluno.presente ? 'Presente' : 'Faltou'}</li>`;
-                });
-
-                relatorioContent += "</ul>";
-            });
-
-            relatorioDiv.innerHTML = relatorioContent;
-            relatorioDiv.classList.remove("hidden");
-        }
-
-        // Inicializar a renderização dos alunos e calendário
+        // Inicializar a renderização do sistema
         renderizarListaAlunos();
-        renderizarCalendario();
     </script>
+
 </body>
+
 </html>
