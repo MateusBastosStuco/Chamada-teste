@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciamento de Presença</title>
+    <title>Gerenciamento de Alunos - Sistema de Chamada</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -28,43 +29,30 @@
             max-width: 1200px;
         }
 
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .calendar-cell {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            min-height: 200px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .hidden {
-            display: none;
+        .btn-remove,
+        .btn-add-calendar,
+        .btn-presenca,
+        .btn-falta {
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
         }
 
         .btn-remove {
             background: red;
             color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
         }
 
-        .btn-add-calendar {
+        .btn-presenca {
             background: green;
             color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 5px;
+        }
+
+        .btn-falta {
+            background: red;
+            color: white;
         }
 
         .aluno-item {
@@ -77,122 +65,310 @@
             border-radius: 5px;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+        .btn-clear-all {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .status-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .status-container .btn-presenca,
+        .status-container .btn-falta {
+            margin-left: 10px;
+        }
+
+        .btn-status {
+            background-color: #f7c500;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .justificativa-falta {
+            margin-top: 5px;
+            display: none;
+        }
+
+        .justificativa-falta textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .justificativa-falta button {
+            margin-top: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="container-admin">
-        <h2>Gerenciar Alunos</h2>
+        <h2>Gerenciar Alunos - Sistema de Chamada</h2>
 
-        <input type="text" id="nomeAluno" class="form-control mb-2" placeholder="Nome do Aluno">
-        
-        <select id="disciplina" class="form-select mb-2">
-            <option value="">Disciplina</option>
-            <option value="voleibol">Voleibol</option>
-            <option value="futebol">Futebol</option>
-            <option value="street">Street</option>
-            <option value="teatro">Teatro</option>
-            <option value="ludoteca">Ludoteca</option>
-            <option value="eureca">Eureca</option>
-            <option value="musica">Música</option>
-        </select>
+        <!-- Filtro de Disciplina -->
+        <div class="mb-3">
+            <label for="filtroDisciplina" class="form-label">Filtrar por Disciplina</label>
+            <select id="filtroDisciplina" class="form-select" onchange="filtrarAlunos()">
+                <option value="">Todas as Disciplinas</option>
+                <option value="Street Dance">Street Dance</option>
+                <option value="Futebol">Futebol</option>
+                <option value="Música">Música</option>
+                <option value="Ludoteca Segunda e Quarta">Ludoteca Segunda e Quarta</option>
+                <option value="Contação de Histórias">Contação de Histórias</option>
+                <option value="Ballet">Ballet</option>
+                <option value="Vôlei">Vôlei</option>
+                <option value="Ludoteca Terça e Quinta">Ludoteca Terça e Quinta</option>
+                <option value="Teatro">Teatro</option>
+                <option value="Programa Eureka">Programa Eureka</option>
+                <option value="Sucatoteca">Sucatoteca</option>
+                <option value="Adolescer">Adolescer</option>
+            </select>
+        </div>
 
-        <select id="periodo" class="form-select mb-2">
-            <option value="">Período</option>
-            <option value="manha">Manhã</option>
-            <option value="tarde">Tarde</option>
-        </select>
+        <!-- Formulário para adicionar aluno -->
+        <div class="mb-3">
+            <input type="text" id="nomeAluno" class="form-control" placeholder="Nome do Aluno">
+        </div>
 
-        <select id="diaSemana" class="form-select mb-3">
-            <option value="">Dia da Semana</option>
-            <option value="segunda">Segunda</option>
-            <option value="terca">Terça</option>
-            <option value="quarta">Quarta</option>
-            <option value="quinta">Quinta</option>
-            <option value="sexta">Sexta</option>
-        </select>
+        <div class="mb-3">
+            <label for="disciplina1" class="form-label">Disciplina 1</label>
+            <select id="disciplina1" class="form-select">
+                <option value="">Selecione a Disciplina</option>
+                <option value="Street Dance">Street Dance</option>
+                <option value="Futebol">Futebol</option>
+                <option value="Música">Música</option>
+                <option value="Ludoteca Segunda e Quarta">Ludoteca Segunda e Quarta</option>
+                <option value="Contação de Histórias">Contação de Histórias</option>
+                <option value="Ballet">Ballet</option>
+                <option value="Vôlei">Vôlei</option>
+                <option value="Ludoteca Terça e Quinta">Ludoteca Terça e Quinta</option>
+                <option value="Teatro">Teatro</option>
+                <option value="Programa Eureka">Programa Eureka</option>
+                <option value="Sucatoteca">Sucatoteca</option>
+                <option value="Adolescer">Adolescer</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="disciplina2" class="form-label">Disciplina 2</label>
+            <select id="disciplina2" class="form-select">
+                <option value="">Selecione a Disciplina</option>
+                <option value="Street Dance">Street Dance</option>
+                <option value="Futebol">Futebol</option>
+                <option value="Música">Música</option>
+                <option value="Ludoteca Segunda e Quarta">Ludoteca Segunda e Quarta</option>
+                <option value="Contação de Histórias">Contação de Histórias</option>
+                <option value="Ballet">Ballet</option>
+                <option value="Vôlei">Vôlei</option>
+                <option value="Ludoteca Terça e Quinta">Ludoteca Terça e Quinta</option>
+                <option value="Teatro">Teatro</option>
+                <option value="Programa Eureka">Programa Eureka</option>
+                <option value="Sucatoteca">Sucatoteca</option>
+                <option value="Adolescer">Adolescer</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <select id="periodo" class="form-select">
+                <option value="">Período</option>
+                <option value="Periodo Manha 1">Periodo Manha 1</option>
+                <option value="Periodo Manha 2">Periodo Manha 2</option>
+                <option value="Periodo Tarde 1">Periodo Tarde 1</option>
+                <option value="Periodo Tarde 2">Periodo Tarde 2</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <select id="diaSemana" class="form-select">
+                <option value="">Dia da Semana</option>
+                <option value="segunda">Segunda</option>
+                <option value="terca">Terça</option>
+                <option value="quarta">Quarta</option>
+                <option value="quinta">Quinta</option>
+                <option value="sexta">Sexta</option>
+                <option value="Segunda e Quarta">Segunda e Quarta</option>
+                <option value="Terça e Quinta">Terça e Quinta</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <input type="text" id="professor" class="form-control" placeholder="Nome do Professor">
+        </div>
 
         <button class="btn btn-primary w-100" onclick="adicionarAluno()">Adicionar Aluno</button>
-        <button class="btn btn-secondary w-100 mt-2" onclick="toggleLista()">Esconder Lista</button>
 
-        <div class="alunos-lista" id="listaContainer">
-            <h4>Lista de Alunos</h4>
-            <ul id="listaAlunos"></ul>
-        </div>
+        <!-- Lista de Alunos -->
+        <h4 class="mt-4">Lista de Alunos</h4>
+        <button class="btn btn-secondary w-100 mb-3" onclick="toggleAlunos()">Mostrar/Esconder Alunos</button>
+        <div id="listaAlunos"></div>
 
-        <div class="calendar">
-            <div class="calendar-cell" id="segunda"><strong>Segunda</strong><div id="manhaSegunda"></div><hr><div id="tardeSegunda"></div></div>
-            <div class="calendar-cell" id="terca"><strong>Terça</strong><div id="manhaTerca"></div><hr><div id="tardeTerca"></div></div>
-            <div class="calendar-cell" id="quarta"><strong>Quarta</strong><div id="manhaQuarta"></div><hr><div id="tardeQuarta"></div></div>
-            <div class="calendar-cell" id="quinta"><strong>Quinta</strong><div id="manhaQuinta"></div><hr><div id="tardeQuinta"></div></div>
-            <div class="calendar-cell" id="sexta"><strong>Sexta</strong><div id="manhaSexta"></div><hr><div id="tardeSexta"></div></div>
-        </div>
+        <!-- Botão para limpar todos os dados -->
+        <button class="btn-clear-all" onclick="limparTodosDados()">Limpar Todos os Alunos</button>
     </div>
 
     <script>
         let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
-        let listaVisivel = true;
+        let filtroDisciplina = "";
 
+        // Função para limpar filtro de disciplina
+        function clearFiltro() {
+            document.getElementById("filtroDisciplina").value = "";
+            filtroDisciplina = "";
+            renderizarListaAlunos();
+        }
+
+        // Função para adicionar aluno
         function adicionarAluno() {
             const nome = document.getElementById('nomeAluno').value;
-            const disciplina = document.getElementById('disciplina').value;
+            const disciplina1 = document.getElementById('disciplina1').value;
+            const disciplina2 = document.getElementById('disciplina2').value;
             const periodo = document.getElementById('periodo').value;
             const diaSemana = document.getElementById('diaSemana').value;
+            const professor = document.getElementById('professor').value;
 
-            if (!nome || !disciplina || !periodo || !diaSemana) {
+            if (!nome || (!disciplina1 && !disciplina2) || !periodo || !diaSemana || !professor) {
                 alert("Preencha todos os campos.");
                 return;
             }
 
-            alunos.push({ nome, disciplina, periodo, diaSemana, noCalendario: false });
-            localStorage.setItem("alunos", JSON.stringify(alunos));
+            if (disciplina1) {
+                alunos.push({ nome, disciplina: disciplina1, periodo, diaSemana, professor, status: null, justificativa: "" });
+            }
 
+            if (disciplina2) {
+                alunos.push({ nome, disciplina: disciplina2, periodo, diaSemana, professor, status: null, justificativa: "" });
+            }
+
+            localStorage.setItem("alunos", JSON.stringify(alunos));
             renderizarListaAlunos();
         }
 
-        function adicionarAoCalendario(index) {
-            alunos[index].noCalendario = true;
-            localStorage.setItem("alunos", JSON.stringify(alunos));
-            renderizarCalendario();
+        // Função para mostrar ou esconder a lista de alunos
+        function toggleAlunos() {
+            const lista = document.getElementById("listaAlunos");
+            lista.classList.toggle("hidden");
         }
 
+        // Função para renderizar lista de alunos por Período, Dia e Professor
+        function renderizarListaAlunos() {
+            const listaAlunosDiv = document.getElementById("listaAlunos");
+            listaAlunosDiv.innerHTML = "";
+
+            let alunosFiltrados = alunos.filter(aluno => {
+                return filtroDisciplina ? aluno.disciplina === filtroDisciplina : true;
+            });
+
+            // Agrupar alunos por Período > Dia > Professor
+            let alunosAgrupados = alunosFiltrados.reduce((acc, aluno) => {
+                if (!acc[aluno.periodo]) acc[aluno.periodo] = {};
+                if (!acc[aluno.periodo][aluno.diaSemana]) acc[aluno.periodo][aluno.diaSemana] = {};
+                if (!acc[aluno.periodo][aluno.diaSemana][aluno.professor]) {
+                    acc[aluno.periodo][aluno.diaSemana][aluno.professor] = [];
+                }
+                acc[aluno.periodo][aluno.diaSemana][aluno.professor].push(aluno);
+                return acc;
+            }, {});
+
+            // Exibir a estrutura agrupada
+            for (let periodo in alunosAgrupados) {
+                const periodoDiv = document.createElement("div");
+                periodoDiv.classList.add("periodo");
+                periodoDiv.innerHTML = `<h5>Período: ${periodo}</h5>`;
+
+                for (let dia in alunosAgrupados[periodo]) {
+                    const diaDiv = document.createElement("div");
+                    diaDiv.classList.add("dia");
+                    diaDiv.innerHTML = `<h6>Dia: ${dia}</h6>`;
+
+                    for (let professor in alunosAgrupados[periodo][dia]) {
+                        const professorDiv = document.createElement("div");
+                        professorDiv.classList.add("professor");
+                        professorDiv.innerHTML = `<h7>Professor: ${professor}</h7>`;
+
+                        alunosAgrupados[periodo][dia][professor].forEach((aluno, index) => {
+                            const alunoDiv = document.createElement("div");
+                            alunoDiv.classList.add("aluno-item");
+
+                            alunoDiv.innerHTML = `
+                                <span>${aluno.nome} - ${aluno.disciplina}</span>
+                                <div class="status-container">
+                                    <button class="btn-presenca" onclick="marcarStatus(${index})">Presente</button>
+                                    <button class="btn-falta" onclick="marcarStatus(${index})">Faltou</button>
+                                    <button class="btn-remove" onclick="removerAluno(${index})">Remover</button>
+                                </div>
+                            `;
+
+                            professorDiv.appendChild(alunoDiv);
+                        });
+
+                        diaDiv.appendChild(professorDiv);
+                    }
+
+                    periodoDiv.appendChild(diaDiv);
+                }
+
+                listaAlunosDiv.appendChild(periodoDiv);
+            }
+        }
+
+        // Função para marcar presença ou falta
+        function marcarStatus(index) {
+            const aluno = alunos[index];
+            if (aluno.status === "Presente") {
+                aluno.status = "Faltou";
+            } else {
+                aluno.status = "Presente";
+            }
+            localStorage.setItem("alunos", JSON.stringify(alunos));
+            renderizarListaAlunos();
+        }
+
+        // Função para remover aluno
         function removerAluno(index) {
             alunos.splice(index, 1);
             localStorage.setItem("alunos", JSON.stringify(alunos));
             renderizarListaAlunos();
-            renderizarCalendario();
         }
 
-        function renderizarListaAlunos() {
-            const listaAlunos = document.getElementById("listaAlunos");
-            listaAlunos.innerHTML = "";
-
-            alunos.forEach((aluno, index) => {
-                const li = document.createElement("li");
-                li.classList.add("aluno-item");
-                li.innerHTML = `${aluno.nome} - ${aluno.disciplina}
-                    <button class="btn-add-calendar" onclick="adicionarAoCalendario(${index})">Colocar no Calendário</button>
-                    <button class="btn-remove" onclick="removerAluno(${index})">X</button>
-                `;
-                listaAlunos.appendChild(li);
-            });
+        // Função para limpar todos os dados
+        function limparTodosDados() {
+            if (confirm("Tem certeza que deseja limpar todos os dados?")) {
+                alunos = [];
+                localStorage.removeItem("alunos");
+                renderizarListaAlunos();
+            }
         }
 
-        function renderizarCalendario() {
-            document.querySelectorAll('.calendar-cell div[id^="manha"], .calendar-cell div[id^="tarde"]').forEach(el => el.innerHTML = '');
-
-            alunos.filter(aluno => aluno.noCalendario).forEach(aluno => {
-                document.getElementById(`${aluno.periodo}${aluno.diaSemana}`).innerHTML += `<div><strong>${aluno.nome}</strong> - ${aluno.disciplina}</div>`;
-            });
-        }
-
-        function toggleLista() {
-            document.getElementById("listaContainer").classList.toggle("hidden");
-        }
-
+        // Inicializar a renderização do sistema
         renderizarListaAlunos();
-        renderizarCalendario();
     </script>
 
 </body>
+
 </html>
